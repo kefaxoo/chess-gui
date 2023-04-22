@@ -16,7 +16,9 @@ public class InfoWindow extends JFrame {
     private void createWindow() {
         var blackScoreLabel = new JLabel("Black Score: " + Game.getBlackScore());
         var whiteScoreLabel = new JLabel("White Score: " + Game.getWhiteScore());
-        var panel = new JPanel(new GridLayout(2, 1));
+        var whoWillMakeMove = new JLabel("Move color: " + (Game.isBlackMakeMove() ? "Black" : "White"));
+        var panel = new JPanel(new GridLayout(3, 1));
+        panel.add(whoWillMakeMove);
         panel.add(blackScoreLabel);
         panel.add(whiteScoreLabel);
         this.getContentPane().add(panel);

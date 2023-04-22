@@ -1,6 +1,9 @@
 package com.chess;
 
 import com.chess.figure.*;
+
+import javax.xml.crypto.Data;
+import java.io.*;
 import java.util.Objects;
 
 public class Game {
@@ -57,8 +60,6 @@ public class Game {
             } else {
                 whiteScore++;
             }
-
-            infoWindow.updateWindow();
         }
 
         squares[selectedX][selectedY] = new Square((selectedX + selectedY) % 2 == 1, null, selectedX,
@@ -68,6 +69,7 @@ public class Game {
         squares[newX][newY] = new Square((newX + newY) % 2 == 1, selectedSquare.getFigure(), newX, newY);
         board.updateGrid();
         isBlackMakeMove = !selectedSquare.isBlackFigure();
+        infoWindow.updateWindow();
         selectedSquare = null;
         isModifiedSquare = true;
     }
@@ -127,5 +129,93 @@ public class Game {
 
     public static boolean isModifiedSquare() {
         return isModifiedSquare;
+    }
+
+    public static void saveGame(String filename) {
+        try (var outputFile = new DataOutputStream(new FileOutputStream(filename))) {
+            for (var row: squares) {
+                for (var square: row) {
+                    if (square.getFigure() == null) {
+                        outputFile.writeByte(0);
+                    } else {
+                        var type = Figure.getType(square.getFigure());
+                        var x = square.getCoordX();
+                        var y = square.getCoordY();
+                        var color = square.isBlackFigure() ? 1 : 0;
+                        var data = (color << 11) | (y << 7) | (x << 3) | type;
+                        System.out.println(type + " " + x + " " + y + " " + color + " " + data);
+                        System.out.println(Integer.toBinaryString(data));
+                        outputFile.writeShort(data);
+                    }
+                }
+            }
+        } catch (IOException exception) {
+            System.err.println("Error while saving game: " + exception.getMessage());
+        }
+    }
+
+    public static void openGame(String filename) {
+        try (DataInputStream in = new DataInputStream(new FileInputStream(filename))) {
+            squares = new Square[8][8];
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    squares[i][j] = new Square(((i + j) % 2) == 1, null, i, j);
+                }
+            }
+
+            while (in.available() > 0) {
+                var data = in.readShort();
+                var stringRepresentation = Integer.toBinaryString(data);
+                System.out.println(stringRepresentation);
+                if (data != 0) {
+                    var color = (data >> 11) & 0b1;
+                    var y = (data >> 7) & 0b1111;
+                    var x = (data >> 3) & 0b1111;
+                    var type = data & 0b111;
+                    System.out.println(type + " " + x + " " + y + " " + color + " " + data);
+                    var isBlackFigure = color == 1;
+                    var figure = switch (type) {
+                        case 1 -> new King(isBlackFigure);
+                        case 2 -> new Queen(isBlackFigure);
+                        case 3 -> new Rook(isBlackFigure);
+                        case 4 -> new Bishop(isBlackFigure);
+                        case 5 -> new Knight(isBlackFigure);
+                        default -> new Pawn(isBlackFigure);
+                    };
+
+                    var square = new Square(((x + y) % 2) == 1, figure, x, y);
+                    squares[x][y] = square;
+                }
+            }
+
+            isBlackMakeMove = false;
+            board.updateGrid();
+            getScore();
+            infoWindow.updateWindow();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            System.err.println("Error loading game board: " + e.getMessage());
+        }
+    }
+
+    private static void getScore() {
+        blackScore = 16;
+        whiteScore = 16;
+        for (var row: squares) {
+            for (var square: row) {
+                if (square.getFigure() != null) {
+                    if (square.isBlackFigure()) {
+                        blackScore--;
+                    } else {
+                        whiteScore--;
+                    }
+                }
+            }
+        }
+    }
+
+    public static boolean isBlackMakeMove() {
+        return isBlackMakeMove;
     }
 }
