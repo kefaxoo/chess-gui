@@ -37,67 +37,61 @@ public class Board extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getModifiersEx() == InputEvent.CTRL_DOWN_MASK) {
-            switch (e.getKeyCode()) {
-                case KeyEvent.VK_O -> {
-                    JFileChooser fileChooser = new JFileChooser();
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                            "Binary files (*.bin)", "bin");
-                    fileChooser.setFileFilter(filter);
-                    int dialogueResult = fileChooser.showOpenDialog(null);
-                    if (dialogueResult == JFileChooser.APPROVE_OPTION) {
-                        var filePath = fileChooser.getSelectedFile().getAbsolutePath();
-                        Game.openGame(filePath);
-                    }
+        System.out.println(e.getKeyCode());
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_O -> {
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "Binary files (*.bin)", "bin");
+                fileChooser.setFileFilter(filter);
+                int dialogueResult = fileChooser.showOpenDialog(null);
+                if (dialogueResult == JFileChooser.APPROVE_OPTION) {
+                    var filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                    Game.openGame(filePath);
                 }
-                case KeyEvent.VK_S -> {
-                    JFileChooser fileChooser = new JFileChooser();
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                            "Binary files (*.bin)", "bin");
-                    fileChooser.setFileFilter(filter);
-                    int dialogResult = fileChooser.showSaveDialog(null);
-                    if (dialogResult == JFileChooser.APPROVE_OPTION) {
-                        String filePath = fileChooser.getSelectedFile().getAbsolutePath();
-                        Game.saveGame(filePath);
-                    }
+            }
+            case KeyEvent.VK_S -> {
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "Binary files (*.bin)", "bin");
+                fileChooser.setFileFilter(filter);
+                int dialogResult = fileChooser.showSaveDialog(null);
+                if (dialogResult == JFileChooser.APPROVE_OPTION) {
+                    String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                    Game.saveGame(filePath);
                 }
-                case KeyEvent.VK_W -> {
-                    System.out.println("Ctrl+w");
-                    if (Game.isModifiedSquare()) {
-                        var dialogueResult = JOptionPane.showConfirmDialog(null,
-                                "Do you want to save state of the game?", "", JOptionPane.YES_NO_OPTION);
-                        if (dialogueResult == JOptionPane.YES_OPTION) {
-                            JFileChooser fileChooser = new JFileChooser();
-                            FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                                    "Binary files (*.bin)", "bin");
-                            fileChooser.setFileFilter(filter);
-                            int dialogResult = fileChooser.showSaveDialog(null);
-                            if (dialogResult == JFileChooser.APPROVE_OPTION) {
-                                String filePath = fileChooser.getSelectedFile().getAbsolutePath();
-                                System.out.println("Selected file path: " + filePath);
-                                Game.saveGame(filePath);
-                                System.exit(0);
-                            } else {
-                                System.exit(0);
-                            }
+            }
+            case KeyEvent.VK_W -> {
+                if (Game.isModifiedSquare()) {
+                    var dialogueResult = JOptionPane.showConfirmDialog(null,
+                            "Do you want to save state of the game?", "", JOptionPane.YES_NO_OPTION);
+                    if (dialogueResult == JOptionPane.YES_OPTION) {
+                        JFileChooser fileChooser = new JFileChooser();
+                        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                                "Binary files (*.bin)", "bin");
+                        fileChooser.setFileFilter(filter);
+                        int dialogResult = fileChooser.showSaveDialog(null);
+                        if (dialogResult == JFileChooser.APPROVE_OPTION) {
+                            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                            System.out.println("Selected file path: " + filePath);
+                            Game.saveGame(filePath);
+                            System.exit(0);
                         } else {
                             System.exit(0);
                         }
                     } else {
                         System.exit(0);
                     }
+                } else {
+                    System.exit(0);
                 }
             }
         }
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-        System.out.println("");
-    }
+    public void keyReleased(KeyEvent e) {}
 
     @Override
-    public void keyTyped(KeyEvent e) {
-        System.out.println("");
-    }
+    public void keyTyped(KeyEvent e) {}
 }
