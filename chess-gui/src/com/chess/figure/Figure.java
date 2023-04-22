@@ -1,10 +1,10 @@
 package com.chess.figure;
 
-public class Figure {
+public abstract class Figure {
     private final String name;
     private final Boolean isBlack;
 
-    public Figure(String name, Boolean isBlack) {
+    protected Figure(String name, Boolean isBlack) {
         this.name = name;
         this.isBlack = isBlack;
     }

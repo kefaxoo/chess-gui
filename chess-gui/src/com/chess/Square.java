@@ -25,12 +25,15 @@ public class Square extends JButton {
         this.figure = figure;
         this.coordX = coordX;
         this.coordY = coordY;
-        setText(figure.getName());
-        setFont(new Font("Arial", Font.PLAIN, 40));
+        if (figure != null) {
+            setText(figure.getName());
+        }
+
+        setFont(new Font("Arial", Font.PLAIN, 50));
         addActionListener(listener);
+        setOpaque(true);
+        setBorderPainted(false);
         if (isBlackSquare != null && isBlackSquare) {
-            setOpaque(true);
-            setBorderPainted(false);
             setBackground(Color.BLACK); // for the background
             setForeground(Color.WHITE); // for the text
         }
@@ -38,7 +41,8 @@ public class Square extends JButton {
 
     @Override
     public String toString() {
-        return "Is black square: " + isBlackSquare + "\nFigure: " + figure.getName() + "\nCoordinates: (" + coordX + "; " + coordY + ")";
+        return "Is black square: " + isBlackSquare + "\nFigure: " + figure.getName() + "\nCoordinates: (" + coordX +
+                "; " + coordY + ")";
     }
 
     @Override
@@ -59,6 +63,10 @@ public class Square extends JButton {
     }
 
     public Boolean isBlackFigure() {
-        return figure.isBlack();
+        if (figure == null) {
+            return null;
+        } else {
+            return figure.isBlack();
+        }
     }
 }
