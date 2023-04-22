@@ -24,7 +24,7 @@ public class Board extends JFrame implements KeyListener {
                 panel.add(square);
             }
         }
-        
+
         this.getContentPane().add(panel);
     }
 
@@ -39,8 +39,28 @@ public class Board extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if (e.getModifiersEx() == InputEvent.CTRL_DOWN_MASK) {
             switch (e.getKeyCode()) {
-                case KeyEvent.VK_O -> System.out.println("Ctrl+o");
-                case KeyEvent.VK_S -> System.out.println("Ctrl+s");
+                case KeyEvent.VK_O -> {
+                    JFileChooser fileChooser = new JFileChooser();
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                            "Binary files (*.bin)", "bin");
+                    fileChooser.setFileFilter(filter);
+                    int dialogueResult = fileChooser.showOpenDialog(null);
+                    if (dialogueResult == JFileChooser.APPROVE_OPTION) {
+                        var filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                        Game.openGame(filePath);
+                    }
+                }
+                case KeyEvent.VK_S -> {
+                    JFileChooser fileChooser = new JFileChooser();
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                            "Binary files (*.bin)", "bin");
+                    fileChooser.setFileFilter(filter);
+                    int dialogResult = fileChooser.showSaveDialog(null);
+                    if (dialogResult == JFileChooser.APPROVE_OPTION) {
+                        String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                        Game.saveGame(filePath);
+                    }
+                }
                 case KeyEvent.VK_W -> {
                     System.out.println("Ctrl+w");
                     if (Game.isModifiedSquare()) {
@@ -55,6 +75,8 @@ public class Board extends JFrame implements KeyListener {
                             if (dialogResult == JFileChooser.APPROVE_OPTION) {
                                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                                 System.out.println("Selected file path: " + filePath);
+                                Game.saveGame(filePath);
+                                System.exit(0);
                             } else {
                                 System.exit(0);
                             }
@@ -70,8 +92,12 @@ public class Board extends JFrame implements KeyListener {
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {
+        System.out.println("");
+    }
 
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+        System.out.println("");
+    }
 }

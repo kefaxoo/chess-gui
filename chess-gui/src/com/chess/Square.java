@@ -41,7 +41,7 @@ public class Square extends JButton {
 
     @Override
     public String toString() {
-        return "Is black square: " + isBlackSquare + "\nFigure: " + figure.getName() + "\nCoordinates: (" + coordX +
+        return "Is black square: " + isBlackSquare + "\nFigure: " + figure + "\nCoordinates: (" + coordX +
                 "; " + coordY + ")";
     }
 
