@@ -8,29 +8,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Square extends JButton {
-    private boolean isBlack = false;
-    private boolean isBlackFigure = false;
-    private Figure figure;
+    private final Boolean isBlackSquare;
+    private final Figure figure;
 
-    private int x;
-    private int y;
+    private final int coordX;
+    private final int coordY;
 
-    public Square(boolean isBlack, boolean isBlackFigure, Figure figure, int x, int y) {
+    public Square(Boolean isBlackSquare, Figure figure, int coordX, int coordY) {
         var listener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Game.setSquare(new Square(isBlack, isBlackFigure, figure, x, y));
+                Game.setSquare(new Square(isBlackSquare, figure, coordX, coordY));
             }
         };
 
-        this.isBlack = isBlack;
-        this.isBlackFigure = isBlackFigure;
+        this.isBlackSquare = isBlackSquare;
         this.figure = figure;
-        this.x = x;
-        this.y = y;
+        this.coordX = coordX;
+        this.coordY = coordY;
         setText(figure.getName());
         setFont(new Font("Arial", Font.PLAIN, 40));
         addActionListener(listener);
-        if (isBlack) {
+        if (isBlackSquare != null && isBlackSquare) {
             setOpaque(true);
             setBorderPainted(false);
             setBackground(Color.BLACK); // for the background
@@ -40,7 +38,7 @@ public class Square extends JButton {
 
     @Override
     public String toString() {
-        return "Is black: " + isBlack + "\nFigure: " + figure.getName() + "\nCoordinates: (" + x + "; " + y + ")";
+        return "Is black square: " + isBlackSquare + "\nFigure: " + figure.getName() + "\nCoordinates: (" + coordX + "; " + coordY + ")";
     }
 
     @Override
@@ -48,19 +46,19 @@ public class Square extends JButton {
         return figure.getName();
     }
 
-    public int getCoordinateX() {
-        return x;
+    public int getCoordX() {
+        return coordX;
     }
 
-    public int getCoordinateY() {
-        return y;
+    public int getCoordY() {
+        return coordY;
     }
 
     public Figure getFigure() {
         return figure;
     }
 
-    public boolean isBlackFigure() {
-        return isBlackFigure;
+    public Boolean isBlackFigure() {
+        return figure.isBlack();
     }
 }
