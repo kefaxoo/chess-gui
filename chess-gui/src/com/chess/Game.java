@@ -145,7 +145,7 @@ public class Game {
                         var data = (color << 11) | (y << 7) | (x << 3) | type;
                         System.out.println(type + " " + x + " " + y + " " + color + " " + data);
                         System.out.println(Integer.toBinaryString(data));
-                        outputFile.writeShort(data);
+                        outputFile.writeInt(data);
                     }
                 }
             }
@@ -164,7 +164,7 @@ public class Game {
             }
 
             while (in.available() > 0) {
-                var data = in.readShort();
+                var data = in.readInt();
                 var stringRepresentation = Integer.toBinaryString(data);
                 System.out.println(stringRepresentation);
                 if (data != 0) {
